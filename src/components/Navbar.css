@@ -1,0 +1,132 @@
+/* Base Styles */
+.navbar {
+    background-color: #333;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50px; /* ✅ Reduced height for compact design */
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 15px; /* ✅ Reduced padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.navbar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem; /* ✅ Slightly smaller for better balance */
+    color: #FFD700;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
+    margin: 0; /* ✅ Removed extra margin */
+}
+
+.navbar-title:hover {
+    transform: scale(1.05);
+}
+
+.navbar-buttons {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    top: 50px; /* ✅ Adjusted to align with new navbar height */
+    right: 15px; /* ✅ Adjusted spacing */
+    background-color: #333;
+    border-radius: 5px;
+    padding: 8px 15px; /* ✅ Reduced padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-buttons.show {
+    display: flex;
+    padding: 5px 30px 8px 10px;
+    margin-top: 5px;
+}
+
+.nav-btn {
+    background-color: #6a0dad;
+    color: #fff;
+    border: none;
+    padding: 6px 12px; /* ✅ Reduced button size */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px; /* ✅ Smaller font size */
+    transition: background 0.3s ease, transform 0.3s ease;
+    margin-bottom: 3px;
+}
+
+.nav-btn:hover {
+    background-color: #8a2be2;
+    transform: scale(1.02);
+}
+
+.menu-icon {
+    display: block;
+    cursor: pointer;
+    padding: 5px 10px; /* ✅ Reduced padding */
+    position: relative;
+    z-index: 1001;
+}
+
+.menu-icon .bar {
+    width: 25px; /* ✅ Smaller icon for better proportions */
+    height: 2.5px;
+    background-color: #fff;
+    margin: 4px 0;
+    transition: 0.4s;
+    display: block;
+}
+
+.menu-icon.open .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-4px, 4px);
+}
+
+.menu-icon.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.menu-icon.open .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-4px, -4px);
+}
+
+/* Media Query for larger screens */
+@media (min-width: 768px) {
+    .navbar {
+        padding: 10px 30px; /* ✅ Reduced padding */
+        height: 60px; /* ✅ Reduced navbar height */
+    }
+
+    .navbar-title {
+        font-size: 1.8rem; /* ✅ Balanced for larger screens */
+    }
+
+    .navbar-buttons {
+        display: flex;
+        flex-direction: row;
+        position: static;
+        background-color: transparent;
+        box-shadow: none;
+        padding: 0;
+        gap: 8px; /* ✅ Reduced gap for compact look */
+        margin-right: 40px;
+        margin-left: auto;
+    }
+
+    .nav-btn {
+        padding: 8px 20px; /* ✅ Reduced button padding */
+        border-radius: 5px;
+        font-size: 16px;
+        margin-bottom: 0;
+    }
+
+    .nav-btn:hover {
+        transform: translateY(-2px);
+    }
+
+    .menu-icon {
+        display: none;
+    }
+}

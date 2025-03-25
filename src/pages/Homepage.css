@@ -1,0 +1,89 @@
+/* Overall page styling with darker grey background */
+.homepage-container {
+  background: linear-gradient(to right, #3a3a3a, #2f2f2f); /* Dark grey gradient background */
+  min-height: 100vh; /* Ensure it takes the full height of the screen */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px; /* Add padding to make sure content doesn't touch the edges */
+  box-sizing: border-box; /* To include padding in total width/height calculations */
+}
+
+/* Container for content, keeping it small and centered */
+.container {
+  max-width: 900px; /* Limit the max width */
+  width: 100%; /* Ensure it takes full width within the max width */
+  padding: 30px; /* Add padding inside the container */
+  /* Removed background-color to remove the black box */
+  border-radius: 10px; /* Add rounded corners for better appearance */
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Shadow effect */
+}
+
+/* Animated text styling for heading and paragraphs */
+.animated-text {
+  color: #ffdd00; /* Yellow text color */
+  animation: fadeIn 2s ease-in-out;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Text shadow for a more dynamic look */
+}
+
+/* Specific styling for the heading */
+.homepage-heading {
+  font-size: 2rem; /* Smaller font size */
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Button hover effect */
+.animated-btn {
+  font-size: 1.2rem;
+  padding: 15px 30px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  color: #ffdd00; /* Yellow text color for button text */
+  border: 2px solid #ffdd00; /* Yellow border for the button */
+  background-color: transparent; /* Make background transparent */
+  cursor: pointer;
+}
+
+.animated-btn:hover {
+  background-color: #023e8a;
+  transform: scale(1.1);
+}
+
+/* Animation for fading text */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Media Queries for responsiveness */
+@media (max-width: 768px) {
+  .homepage-container {
+    padding: 30px;
+  }
+
+  .container {
+    padding: 20px;
+  }
+
+  .animated-btn {
+    font-size: 1rem;
+    padding: 12px 25px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    padding: 15px;
+  }
+
+  .animated-btn {
+    font-size: 0.9rem;
+    padding: 10px 20px;
+  }
+}
