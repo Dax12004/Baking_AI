@@ -3,6 +3,7 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import re
 import numpy as np
+import os
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +19,6 @@ density_conversion = {
     'teaspoons': 5
 }
 
-# ✅ Function to convert measurements to grams
 def convert_to_grams(value):
     converted_values = []
     matches = re.findall(r'(\d+(?:\.\d+)?)\s*(cup|cups|tbsp|tablespoon|tablespoons|tsp|teaspoon|teaspoons)', str(value).lower())
@@ -32,58 +32,54 @@ def convert_to_grams(value):
         'total_grams': round(total_grams, 2) if total_grams > 0 else "N/A"
     }
 
-# ✅ Function to clean the data
 def clean_data(df):
     for column in ['cook_time', 'prep_time', 'total_time', 'Total Grams']:
         df[column] = df[column].apply(lambda x: "N/A" if pd.isna(x) else x)
     return df
 
-# ✅ Load and process data
 def load_recipes():
     try:
-        csv_path = 'recipes.csv'
+        csv_path = r'C:\Users\dell\OneDrive\Desktop\ExtraClg_DATA\pbakingAI\recipes.csv'
+        if not os.path.exists(csv_path):
+            raise FileNotFoundError(f"CSV file not found at: {csv_path}")
+        
         df = pd.read_csv(csv_path, on_bad_lines='skip', encoding='utf-8')
 
         if 'Unnamed: 0' in df.columns:
             df.drop(['Unnamed: 0'], axis=1, inplace=True)
 
         df['ingredients'].fillna('', inplace=True)
-
-        # ✅ Normalize and deduplicate by recipe name
         df['__normalized_name'] = df['recipe_name'].astype(str).str.strip().str.lower()
         df = df.groupby('__normalized_name', as_index=False).first()
         df.drop(columns=['__normalized_name'], inplace=True)
-
         df[['Converted Ingredients', 'Total Grams']] = df['ingredients'].apply(
             lambda x: pd.Series(convert_to_grams(x))
         )
-
         df = clean_data(df)
-
         if df.empty:
             raise ValueError("CSV file is empty or data format issue")
-
         return df.to_dict(orient='records')
-
     except Exception as e:
         print(f"Error loading CSV: {e}")
         return []
 
-# ✅ API endpoint for all recipes with pagination and JSON structure
 @app.route('/get-all-recipes', methods=['GET'])
 def get_all_recipes():
     recipes = load_recipes()
     if not recipes:
         return jsonify({'error': 'No recipes found'}), 404
 
-    # Pagination logic
+    search_query = request.args.get('search', '').strip().lower()
+    if search_query:
+        recipes = [recipe for recipe in recipes if search_query in recipe.get('recipe_name', '').lower()]
+    
     page = int(request.args.get('page', 1))
     limit = int(request.args.get('limit', 20))
     sorted_recipes = sorted(recipes, key=lambda x: x.get('recipe_name', '').lower())
-
+    
     start = (page - 1) * limit
     end = start + limit
-
+    
     formatted_data = [
         {
             'Recipe Name': recipe.get('recipe_name', 'N/A'),
@@ -96,10 +92,7 @@ def get_all_recipes():
             'Directions': recipe.get('directions', 'N/A')
         } for recipe in sorted_recipes[start:end]
     ]
-
-    # ✅ Correct total pages calculation and return extended metadata
-    total_pages = (len(recipes) + limit - 1) // limit  # Ceiling division
-
+    total_pages = (len(recipes) + limit - 1) // limit
     return jsonify({
         'recipes': formatted_data,
         'total_pages': total_pages,
@@ -107,10 +100,9 @@ def get_all_recipes():
         'total_recipes': len(recipes)
     })
 
-# ✅ Home route
 @app.route('/', methods=['GET'])
 def home():
-    return "Welcome to Baking AI - Recipes API with Accurate Measurements!"
+    return "Welcome to Baking AI - Recipes API with Search Functionality!"
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080, debug=True)
